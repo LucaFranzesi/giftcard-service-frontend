@@ -9,7 +9,7 @@
 	//Starting flag
 	let currentFlag = $state('it');
 
-	//Define properties recieved by component
+	//Define properties received by component
 	let props = $props();
 	let classes = props.classes;
 	let bgColor = props.bgColor;

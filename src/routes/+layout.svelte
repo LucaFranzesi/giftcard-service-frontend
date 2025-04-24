@@ -42,7 +42,7 @@
 </script>
 
 {#if !isLoading}
-	<div class="bg-surface fixed top-0 right-0 flex flex-row items-start space-x-1 p-5">
+	<div class="bg-surface fixed top-0 right-0 z-10 flex flex-row items-start space-x-1 p-5">
 		<Switch controlActive="bg-primary-500" checked={mode} onCheckedChange={(e) => toggleTheme(e.checked)}>
 			{#snippet inactiveChild()}<IconMoon size="14" />{/snippet}
 			{#snippet activeChild()}<IconSun size="14" />{/snippet}
