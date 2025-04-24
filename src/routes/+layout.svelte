@@ -42,12 +42,8 @@
 </script>
 
 {#if !isLoading}
-	<div class="bg-surface fixed right-0 top-0 flex flex-row items-start space-x-1 p-5">
-		<Switch
-			controlActive="bg-primary-500"
-			checked={mode}
-			onCheckedChange={(e) => toggleTheme(e.checked)}
-		>
+	<div class="bg-surface fixed top-0 right-0 flex flex-row items-start space-x-1 p-5">
+		<Switch controlActive="bg-primary-500" checked={mode} onCheckedChange={(e) => toggleTheme(e.checked)}>
 			{#snippet inactiveChild()}<IconMoon size="14" />{/snippet}
 			{#snippet activeChild()}<IconSun size="14" />{/snippet}
 		</Switch>
@@ -60,9 +56,7 @@
 		</div>
 	</div>
 
-	<footer
-		class="bg-primary-50-950 text-primary-950-50 fixed bottom-0 left-0 w-full p-1 text-right text-sm"
-	>
+	<footer class="bg-primary-50-950 text-primary-950-50 fixed bottom-0 left-0 w-full p-1 text-right text-sm">
 		<p>&copy; {new Date().getFullYear()} Luca Franzesi. All rights reserved.</p>
 	</footer>
 {/if}

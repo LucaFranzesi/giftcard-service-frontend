@@ -47,25 +47,14 @@
 </script>
 
 <div id="flag-picker" class={classes ?? ''}>
-	<button
-		aria-expanded={showMenu}
-		onclick={() => (showMenu = !showMenu)}
-		class="{showMenu ? 'rounded-t-xl' : 'rounded-2xl'} p-1 {bgColor} flex flex-row"
-	>
+	<button aria-expanded={showMenu} onclick={() => (showMenu = !showMenu)} class="{showMenu ? 'rounded-t-xl' : 'rounded-2xl'} p-1 {bgColor} flex flex-row">
 		<span class="fi fi-{currentFlag} mr-0.5 rounded-full"></span>
 		<ChevronDown size="16" />
 	</button>
 	{#if showMenu}
-		<div
-			id="flag-select"
-			class="flex flex-col items-center justify-around rounded-b-2xl p-1 {bgMenu}"
-		>
+		<div id="flag-select" class="flex flex-col items-center justify-around rounded-b-2xl p-1 {bgMenu}">
 			{#each supportedLanguages as { code, flag }}
-				<button
-					onclick={() => changeLang(code)}
-					aria-label={`${flag}-flag`}
-					class={`fi fi-${flag} m-1 rounded-full`}
-				></button>
+				<button onclick={() => changeLang(code)} aria-label={`${flag}-flag`} class={`fi fi-${flag} m-1 rounded-full`}></button>
 			{/each}
 		</div>
 	{/if}
