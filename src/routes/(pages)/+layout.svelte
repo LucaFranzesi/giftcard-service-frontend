@@ -1,17 +1,31 @@
 <script lang="ts">
-	import { Navigation } from '@skeletonlabs/skeleton-svelte';
+	import { Navigation, Avatar } from '@skeletonlabs/skeleton-svelte';
 	import { _ } from 'svelte-i18n';
 	// Icons
 	import IconMenu from '@lucide/svelte/icons/menu';
+	import IconLogOut from '@lucide/svelte/icons/log-out';
 	import IdCard from '@lucide/svelte/icons/id-card';
 	import IconSettings from '@lucide/svelte/icons/settings';
 	import IconFileClock from '@lucide/svelte/icons/file-clock';
+  import { invalidateAll } from '$app/navigation';
 
 	let isExpansed = $state(true);
 
 	function toggleExpanded() {
 		isExpansed = !isExpansed;
 	}
+
+  async function logOut(e : ClickEvent) {
+    e.preventDefault();
+    try {
+      await fetch('/api/logout', {
+        method: 'POST'
+      });
+      invalidateAll();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }
 
 	let { children } = $props();
 </script>
@@ -32,8 +46,17 @@
 			</Navigation.Tile>
 		{/snippet}
 		{#snippet footer()}
-			<Navigation.Tile labelExpanded="Settings" href="/settings" title="Settings">
-				<IconSettings />
+			<Navigation.Tile href="/settings">
+        <div class="flex flex-row items-center justify-start gap-5">
+          <Avatar src="https://i.pravatar.cc/150?img=48" name="skeleton"/>
+          {#if isExpansed}
+            <p class="text-center flex-1">Movimenti</p>
+            <button onclick="{logOut}">
+              <IconLogOut></IconLogOut>
+            </button>
+          {/if}
+        </div>
+				
 			</Navigation.Tile>
 		{/snippet}
 	</Navigation.Rail>

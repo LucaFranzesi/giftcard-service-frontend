@@ -7,8 +7,9 @@
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import IconMoon from '@lucide/svelte/icons/moon';
 	import IconSun from '@lucide/svelte/icons/sun';
+	import type { LayoutProps } from './$types';
 
-	let { children } = $props();
+	let { data, children }: LayoutProps = $props();
 
 	var isLoading = $state(true);
 	let mode = $state(false);

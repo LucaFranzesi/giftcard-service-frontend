@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 
 	let username = $state('');
 	let password = $state('');
@@ -12,7 +12,7 @@
 		error = '';
 
 		try {
-			const response = await fetch('http://localhost:8000/auth/token', {
+			const response = await fetch('/api/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
@@ -29,11 +29,8 @@
 				throw new Error(data.message || 'Login failed');
 			}
 
-			// Store the token in localStorage
-			localStorage.setItem('token', data.access_token);
-
-			// Redirect to home page or dashboard
-			goto('/dashboard');
+			// Redirect to dashboard
+			invalidateAll();
 		} catch (err: unknown) {
 			error = err instanceof Error ? err.message : 'An unexpected error occurred';
 		} finally {
