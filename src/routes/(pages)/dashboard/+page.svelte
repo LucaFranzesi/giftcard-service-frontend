@@ -11,6 +11,7 @@
 	import IconFirst from '@lucide/svelte/icons/chevrons-left';
 	import IconLast from '@lucide/svelte/icons/chevron-right';
 	import type { SourceData } from '$lib/models/SourceData';
+	import FilterButton from '$lib/components/FilterButton.svelte';
 
 	let tableData: SourceData[] = $state([
 		{
@@ -135,6 +136,33 @@
 		},
 	]);
 
+	let enabledFilters = $state([
+		{
+			label: 'Prova 123',
+			icon: IconFilter,
+			type: '',
+			sublabel: 'Sublabel prova',
+		},
+		{
+			label: 'Prova 456',
+			icon: IconFilter,
+			type: 'sort',
+			sublabel: 'Sublabel prova 2',
+		},
+		{
+			label: 'Prova 789',
+			icon: IconEye,
+			type: '',
+			sublabel: '',
+		},
+		{
+			label: 'Prova 123',
+			icon: IconFilter,
+			type: '',
+			sublabel: '',
+		},
+	]);
+
 	// State
 	let page = $state(1);
 	let size = $state(5);
@@ -149,31 +177,25 @@
 		const checkbox = event.target as HTMLInputElement;
 		tableData = tableData.map((x) => ({ ...x, checked: checkbox.checked }));
 	}
+
+	function changeSortOrder(event: Event) {
+		isAscending = !isAscending;
+		const newIcon = isAscending ? IconChevronDown : IconChevronUp;
+
+		enabledFilters = enabledFilters.map((filter) => (filter.type === 'sort' ? { ...filter, icon: newIcon } : filter));
+	}
 </script>
 
 <div class="flex h-fit w-fit flex-row items-center space-x-2 p-5">
-	<button class="btn bg-surface-200-800 rounded-full p-2">
-		<IconFunnel size="16" class="stroke-2" />
-	</button>
-	<button class="bg-surface-200-800 flex h-8 w-fit items-center justify-center gap-1.5 rounded-3xl pr-3 pl-2 text-xs" onclick={() => (isAscending = !isAscending)}>
-		{#if isAscending}
-			<IconChevronDown size="16" class="stroke-2"></IconChevronDown>
-		{:else}
-			<IconChevronUp size="16" class="stroke-2"></IconChevronUp>
-		{/if}
-		<span>Scadenza</span>
-	</button>
-	<button class="bg-surface-200-800 flex h-8 w-fit items-center justify-center gap-1.5 rounded-3xl pr-3 pl-2 text-xs">
-		<IconFilter size="16" class="stroke-2"></IconFilter>
-		<div class="flex items-baseline justify-center gap-1">
-			<span>Paziente</span>
-			<span class="text-[10px] font-light italic">{currentPatient}</span>
-		</div>
-	</button>
-	<button class="bg-surface-200-800 flex h-8 w-fit items-center justify-center gap-1.5 rounded-3xl pr-3 pl-2 text-xs">
-		<IconEye size="16" class="stroke-2"></IconEye>
-		<span>Visualizza Scadute</span>
-	</button>
+	<FilterButton type="minimal" icon={IconFunnel} onClick={changeSortOrder} />
+	<!--
+		<FilterButton label="Scadenza" icon={IconChevronDown} />
+		<FilterButton label="Paziente" sublabel={currentPatient} icon={IconFilter} />
+		<FilterButton label="Visualizza Scadute" icon={IconEye} />
+	-->
+	{#each enabledFilters as filter}
+		<FilterButton type="complete" icon={filter.icon} label={filter.label} sublabel={filter.sublabel} />
+	{/each}
 </div>
 
 <div class="table-wrap pt-5 pr-8 pl-8">
