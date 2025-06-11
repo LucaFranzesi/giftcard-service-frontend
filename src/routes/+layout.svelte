@@ -2,7 +2,7 @@
 	import '../app.css';
 	import FlagPicker from '$lib/components/FlagPicker.svelte';
 	import { locale } from 'svelte-i18n';
-	import { isDark } from '$lib/stores/theme';
+	import { isDark } from '$lib/stores/themeStore';
 	import { onMount } from 'svelte';
 	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import IconMoon from '@lucide/svelte/icons/moon';

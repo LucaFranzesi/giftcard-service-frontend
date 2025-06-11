@@ -30,7 +30,7 @@
 </script>
 
 <div class="grid h-[calc(100vh-2rem)] grid-cols-[auto_1fr]">
-	<Navigation.Rail expanded={isExpansed} tilesJustify="justify-top">
+	<Navigation.Rail expanded={isExpansed} classes="overflow-hidden" tilesJustify="justify-top">
 		{#snippet header()}
 			<Navigation.Tile labelExpanded="Menu" onclick={toggleExpanded} title="Toggle Menu Width">
 				<IconMenu />
@@ -58,7 +58,7 @@
 			</Navigation.Tile>
 		{/snippet}
 	</Navigation.Rail>
-	<div class="items-top flex min-w-full flex-col items-start">
+	<div class="min-w-full flex-col items-start">
 		{@render children()}
 	</div>
 </div>

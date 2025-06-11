@@ -1,17 +1,10 @@
 <script lang="ts">
-	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
-	import IconChevronUp from '@lucide/svelte/icons/chevron-up';
-	import IconFunnel from '@lucide/svelte/icons/funnel';
-	import IconFilter from '@lucide/svelte/icons/list-filter';
-	import IconEye from '@lucide/svelte/icons/eye';
+	import { ChevronDown, ChevronUp, Funnel, ListFilter, Eye, ArrowLeft, ArrowRight, Ellipsis, ChevronsLeft, ChevronsRight } from '@lucide/svelte/icons';
 	import { Pagination } from '@skeletonlabs/skeleton-svelte';
-	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
-	import IconArrowRight from '@lucide/svelte/icons/arrow-right';
-	import IconEllipsis from '@lucide/svelte/icons/ellipsis';
-	import IconFirst from '@lucide/svelte/icons/chevrons-left';
-	import IconLast from '@lucide/svelte/icons/chevron-right';
-	import type { SourceData } from '$lib/models/SourceData';
 	import FilterButton from '$lib/components/FilterButton.svelte';
+	import type { SourceData } from '$lib/models/SourceData';
+	import type { FilterData } from '$lib/models/FilterData';
+	import FilterModal from '$lib/components/FilterModal.svelte';
 
 	let tableData: SourceData[] = $state([
 		{
@@ -136,30 +129,31 @@
 		},
 	]);
 
-	let enabledFilters = $state([
+	//TODO: Actally those are dummy data, change with correct filters
+	let enabledFilters: FilterData[] = $state([
 		{
 			label: 'Prova 123',
-			icon: IconFilter,
+			icon: ListFilter,
 			type: '',
-			sublabel: 'Sublabel prova',
+			value: 'Sublabel prova',
 		},
 		{
 			label: 'Prova 456',
-			icon: IconFilter,
+			icon: ListFilter,
 			type: 'sort',
-			sublabel: 'Sublabel prova 2',
+			value: 'Sublabel prova 2',
 		},
 		{
 			label: 'Prova 789',
-			icon: IconEye,
+			icon: Eye,
 			type: '',
-			sublabel: '',
+			value: '',
 		},
 		{
 			label: 'Prova 123',
-			icon: IconFilter,
+			icon: ListFilter,
 			type: '',
-			sublabel: '',
+			value: '',
 		},
 	]);
 
@@ -167,87 +161,97 @@
 	let page = $state(1);
 	let size = $state(5);
 	let total = $derived(tableData.length);
+	let isAscending = $state(true);
 
 	const slicedSource = $derived(tableData.slice((page - 1) * size, page * size));
-
-	let currentPatient = $state('Giovanni Rana');
-	let isAscending = $state(true);
 
 	function updateCheckStatus(event: Event) {
 		const checkbox = event.target as HTMLInputElement;
 		tableData = tableData.map((x) => ({ ...x, checked: checkbox.checked }));
 	}
 
-	function changeSortOrder(event: Event) {
+	function changeSortOrder() {
 		isAscending = !isAscending;
-		const newIcon = isAscending ? IconChevronDown : IconChevronUp;
+		const newIcon = isAscending ? ChevronDown : ChevronUp;
 
 		enabledFilters = enabledFilters.map((filter) => (filter.type === 'sort' ? { ...filter, icon: newIcon } : filter));
 	}
+
+	let isModalOpen = $state(false);
+
+	function closeModal() {
+		console.log('Primo');
+		isModalOpen = false;
+	}
+
+	function openModal() {
+		isModalOpen = true;
+	}
 </script>
 
-<div class="flex h-fit w-fit flex-row items-center space-x-2 p-5">
-	<FilterButton type="minimal" icon={IconFunnel} onClick={changeSortOrder} />
-	<!--
-		<FilterButton label="Scadenza" icon={IconChevronDown} />
-		<FilterButton label="Paziente" sublabel={currentPatient} icon={IconFilter} />
-		<FilterButton label="Visualizza Scadute" icon={IconEye} />
-	-->
-	{#each enabledFilters as filter}
-		<FilterButton type="complete" icon={filter.icon} label={filter.label} sublabel={filter.sublabel} />
-	{/each}
-</div>
+<div class="relative h-full w-full">
+	{#if isModalOpen}
+		<FilterModal {closeModal} />
+	{/if}
 
-<div class="table-wrap pt-5 pr-8 pl-8">
-	<div class="max-h-[600px] overflow-y-auto">
-		<table class="table w-full">
-			<thead class="bg-surface-100-900 sticky top-0">
-				<tr>
-					<th class="w-12">
-						<input type="checkbox" onclick={updateCheckStatus} />
-					</th>
-					<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Paziente</th>
-					<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Saldo</th>
-					<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Scadenza</th>
-					<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Tipologia</th>
-					<th class="w-full text-xl">Codice</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each slicedSource as row}
+	<div class="flex h-fit w-fit flex-row items-center space-x-2 p-5">
+		<FilterButton type="minimal" icon={Funnel} onClick={openModal} />
+		{#each enabledFilters as filter}
+			<FilterButton type="complete" icon={filter.icon} label={filter.label} sublabel={filter.value} />
+		{/each}
+	</div>
+
+	<div class="table-wrap pt-5 pr-8 pl-8">
+		<div class="max-h-[600px] overflow-y-auto">
+			<table class="table w-full">
+				<thead class="bg-surface-100-900 sticky top-0">
 					<tr>
-						<td class="w-12">
-							<input type="checkbox" checked={row.checked} />
-						</td>
-						<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.paziente}</td>
-						<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.saldo}</td>
-						<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.scadenza}</td>
-						<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.tipologia}</td>
-						<td class="w-full max-w-0 truncate">{row.codice}</td>
+						<th class="w-12">
+							<input type="checkbox" onclick={updateCheckStatus} />
+						</th>
+						<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Paziente</th>
+						<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Saldo</th>
+						<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Scadenza</th>
+						<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Tipologia</th>
+						<th class="w-full text-xl">Codice</th>
 					</tr>
+				</thead>
+				<tbody>
+					{#each slicedSource as row}
+						<tr>
+							<td class="w-12">
+								<input type="checkbox" checked={row.checked} />
+							</td>
+							<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.paziente}</td>
+							<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.saldo}</td>
+							<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.scadenza}</td>
+							<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.tipologia}</td>
+							<td class="w-full max-w-0 truncate">{row.codice}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="flex w-full flex-row justify-between p-5">
+		<div class="flex items-center">
+			<select name="size" id="size" class="select text-xs" value={size} onchange={(e) => (size = Number(e.currentTarget.value))}>
+				{#each [5, 10, 15] as v}
+					<option value={v}>{v}</option>
 				{/each}
-			</tbody>
-		</table>
-	</div>
-</div>
+				<option value={tableData.length}>Show All</option>
+			</select>
+		</div>
 
-<div class="flex w-full flex-row justify-between p-5">
-	<div class="flex items-center">
-		<select name="size" id="size" class="select text-xs" value={size} onchange={(e) => (size = Number(e.currentTarget.value))}>
-			{#each [5, 10, 15] as v}
-				<option value={v}>{v}</option>
-			{/each}
-			<option value={tableData.length}>Show All</option>
-		</select>
-	</div>
-
-	<div class="flex">
-		<Pagination count={total} data={tableData} {page} onPageChange={(e) => (page = e.page)} pageSize={size} onPageSizeChange={(e) => (size = e.pageSize)} siblingCount={4}>
-			{#snippet labelEllipsis()}<IconEllipsis class="size-4" />{/snippet}
-			{#snippet labelNext()}<IconArrowRight class="size-4" />{/snippet}
-			{#snippet labelPrevious()}<IconArrowLeft class="size-4" />{/snippet}
-			{#snippet labelFirst()}<IconFirst class="size-4" />{/snippet}
-			{#snippet labelLast()}<IconLast class="size-4" />{/snippet}
-		</Pagination>
+		<div class="flex">
+			<Pagination count={total} data={tableData} {page} onPageChange={(e) => (page = e.page)} pageSize={size} onPageSizeChange={(e) => (size = e.pageSize)} siblingCount={4}>
+				{#snippet labelEllipsis()}<Ellipsis class="size-4" />{/snippet}
+				{#snippet labelNext()}<ArrowRight class="size-4" />{/snippet}
+				{#snippet labelPrevious()}<ArrowLeft class="size-4" />{/snippet}
+				{#snippet labelFirst()}<ChevronsLeft class="size-4" />{/snippet}
+				{#snippet labelLast()}<ChevronsRight class="size-4" />{/snippet}
+			</Pagination>
+		</div>
 	</div>
 </div>

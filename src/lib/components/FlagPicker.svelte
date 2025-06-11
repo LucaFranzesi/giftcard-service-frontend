@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import { locale, supportedLanguages } from '$lib/stores/language';
+	import { locale, supportedLanguages } from '$lib/stores/languageStore';
 	import { onMount } from 'svelte';
 
 	//Change menu expansed
