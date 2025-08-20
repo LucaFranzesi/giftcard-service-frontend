@@ -32,7 +32,7 @@
 <div class="grid h-[calc(100vh-2rem)] grid-cols-[auto_1fr]">
 	<Navigation.Rail expanded={isExpansed} classes="overflow-hidden" tilesJustify="justify-top">
 		{#snippet header()}
-			<Navigation.Tile labelExpanded="Menu" onclick={toggleExpanded} title="Toggle Menu Width">
+			<Navigation.Tile labelExpanded={$_('MENU_LABEL') ?? 'Menu'} onclick={toggleExpanded} title={$_('MENU_TOGGLE_TITLE') ?? 'Toggle Menu Width'}>
 				<IconMenu />
 			</Navigation.Tile>
 		{/snippet}
@@ -49,7 +49,7 @@
 				<div class="flex flex-row items-center justify-start gap-5">
 					<Avatar src="https://i.pravatar.cc/48?img=48" classes="h-12 w-12" name="skeleton" />
 					{#if isExpansed}
-						<p class="flex-1 text-center">Movimenti</p>
+						<p class="flex-1 text-center">{$_('LOGOUT_LABEL') ?? 'Esci'}</p>
 						<button onclick={logOut}>
 							<IconLogOut></IconLogOut>
 						</button>
