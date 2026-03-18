@@ -51,13 +51,12 @@
 		<FlagPicker {bgColor} {bgMenu} />
 	</div>
 
-	<div class="flex h-full flex-col">
-		<div class="flex-grow">
+	<div class="flex h-screen flex-col">
+		<div class="flex-1 overflow-hidden">
 			{@render children()}
 		</div>
+		<footer class="bg-primary-50-950 text-primary-950-50 w-full p-1 text-right text-sm">
+			<p>&copy; {new Date().getFullYear()} Luca Franzesi. All rights reserved.</p>
+		</footer>
 	</div>
-
-	<footer class="bg-primary-50-950 text-primary-950-50 fixed bottom-0 left-0 w-full p-1 text-right text-sm">
-		<p>&copy; {new Date().getFullYear()} Luca Franzesi. All rights reserved.</p>
-	</footer>
 {/if}

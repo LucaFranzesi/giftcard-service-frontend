@@ -29,7 +29,7 @@
 	let { children } = $props();
 </script>
 
-<div class="grid h-[calc(100vh-2rem)] grid-cols-[auto_1fr]">
+<div class="grid h-full grid-cols-[auto_1fr]">
 	<Navigation.Rail expanded={isExpansed} tilesJustify="justify-top">
 		{#snippet header()}
 			<Navigation.Tile labelExpanded="Menu" onclick={toggleExpanded} title="Toggle Menu Width">
@@ -58,7 +58,7 @@
 			</Navigation.Tile>
 		{/snippet}
 	</Navigation.Rail>
-	<div class="items-top flex min-w-full flex-col items-start">
+	<div class="overflow-hidden">
 		{@render children()}
 	</div>
 </div>
