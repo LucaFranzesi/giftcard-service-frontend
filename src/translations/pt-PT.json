@@ -12,7 +12,7 @@
 	"LOGIN_FAILED_ERROR": "Falha no login",
 	"UNEXPECTED_ERROR": "Ocorreu um erro inesperado",
 	"ALL_RIGHTS_RESERVED": "Todos os direitos reservados",
-	
+	"FILTER_MODAL_TITLE": "Filtros",
 	"FILTER_SORT_SECTION": "ORDENAR",
 	"FILTER_FILTER_SECTION": "FILTRAR",
 	"FILTER_OTHER_SECTION": "OUTROS",
@@ -32,13 +32,11 @@
 	"FILTER_ADD_HIDE_EXPIRED": "Adicionar Ocultar Esgotadas",
 	"FILTER_SHOW_EXPIRED_LABEL": "Mostrar Expiradas",
 	"FILTER_HIDE_EXPIRED_LABEL": "Ocultar Esgotadas",
-	
 	"FILTER_PROP_PATIENT": "Paciente",
 	"FILTER_PROP_BALANCE": "Saldo",
 	"FILTER_PROP_EXPIRY": "Expiração",
 	"FILTER_PROP_TYPE": "Tipo",
 	"FILTER_PROP_CODE": "Código",
-	
 	"FILTER_TYPE_EQUALS": "≡ Igual a",
 	"FILTER_TYPE_NOT_EQUALS": "Diferente de",
 	"FILTER_TYPE_CONTAINS": "Contém",
@@ -46,15 +44,12 @@
 	"FILTER_TYPE_ENDS_WITH": "Termina com",
 	"FILTER_TYPE_GREATER": "Maior que",
 	"FILTER_TYPE_LESS": "Menor que",
-	
 	"SORT_ASCENDING": "▲ Ascendente",
 	"SORT_DESCENDING": "▼ Descendente",
-	
 	"TABLE_PATIENT_HEADER": "Paciente",
 	"TABLE_BALANCE_HEADER": "Saldo",
 	"TABLE_EXPIRY_HEADER": "Expiração",
 	"TABLE_TYPE_HEADER": "Tipo",
 	"TABLE_CODE_HEADER": "Código",
-	
 	"PAGINATION_SHOW_ALL": "Mostrar Tudo"
 }

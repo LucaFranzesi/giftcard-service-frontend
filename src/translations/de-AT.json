@@ -12,7 +12,7 @@
     "LOGIN_FAILED_ERROR": "Anmeldung fehlgeschlagen",
     "UNEXPECTED_ERROR": "Ein unerwarteter Fehler ist aufgetreten",
     "ALL_RIGHTS_RESERVED": "Alle Rechte vorbehalten",
-    
+    "FILTER_MODAL_TITLE": "Filter",
     "FILTER_SORT_SECTION": "SORTIEREN",
     "FILTER_FILTER_SECTION": "FILTERN",
     "FILTER_OTHER_SECTION": "SONSTIGES",
@@ -32,13 +32,11 @@
     "FILTER_ADD_HIDE_EXPIRED": "Erschöpfte ausblenden hinzufügen",
     "FILTER_SHOW_EXPIRED_LABEL": "Abgelaufene anzeigen",
     "FILTER_HIDE_EXPIRED_LABEL": "Erschöpfte ausblenden",
-    
     "FILTER_PROP_PATIENT": "Patient",
     "FILTER_PROP_BALANCE": "Saldo",
     "FILTER_PROP_EXPIRY": "Ablauf",
     "FILTER_PROP_TYPE": "Typ",
     "FILTER_PROP_CODE": "Code",
-    
     "FILTER_TYPE_EQUALS": "≡ Gleich",
     "FILTER_TYPE_NOT_EQUALS": "Ungleich",
     "FILTER_TYPE_CONTAINS": "Enthält",
@@ -46,15 +44,12 @@
     "FILTER_TYPE_ENDS_WITH": "Endet mit",
     "FILTER_TYPE_GREATER": "Größer als",
     "FILTER_TYPE_LESS": "Kleiner als",
-    
     "SORT_ASCENDING": "▲ Aufsteigend",
     "SORT_DESCENDING": "▼ Absteigend",
-    
     "TABLE_PATIENT_HEADER": "Patient",
     "TABLE_BALANCE_HEADER": "Saldo",
     "TABLE_EXPIRY_HEADER": "Ablauf",
     "TABLE_TYPE_HEADER": "Typ",
     "TABLE_CODE_HEADER": "Code",
-    
     "PAGINATION_SHOW_ALL": "Alle anzeigen"
-} 
+}
