@@ -1,75 +1,66 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
-  import PickerComponent from './PickerComponent.svelte';
+	import { onMount } from 'svelte';
+	import PickerComponent from './PickerComponent.svelte';
+	import { _ } from 'svelte-i18n';
 
-  export let isOpen = false;
-  
-  const dispatch = createEventDispatcher();
-  let modalRef: HTMLDivElement;
+	interface Props {
+		isOpen: boolean;
+		onclose: () => void;
+	}
 
-  function closeModal() {
-    dispatch('close');
-  }
+	let { isOpen, onclose }: Props = $props();
 
-  function handleClickOutside(event: MouseEvent) {
-    if (modalRef && !modalRef.contains(event.target as Node)) {
-      closeModal();
-    }
-  }
+	let modalRef: HTMLDivElement = $state(null!);
 
-  function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      closeModal();
-    }
-  }
+	function handleClickOutside(event: MouseEvent) {
+		if (modalRef && !modalRef.contains(event.target as Node)) {
+			onclose();
+		}
+	}
 
-  onMount(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    document.addEventListener('keydown', handleKeyDown);
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			onclose();
+		}
+	}
 
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  });
+	onMount(() => {
+		document.addEventListener('click', handleClickOutside, true);
+		document.addEventListener('keydown', handleKeyDown);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside, true);
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+	});
 </script>
 
 {#if isOpen}
-  <div class="overlay">
-    <div class="modal" bind:this={modalRef}>
-      <div class="modal-content">
-        <PickerComponent />
-      </div>
-    </div>
-  </div>
+	<!-- Overlay -->
+	<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm dark:bg-black/60">
+		<!-- Modal -->
+		<div
+			bind:this={modalRef}
+			class="bg-surface-50 text-surface-900 dark:bg-surface-700 dark:text-surface-50 dark:border-surface-600 relative z-[10000] flex
+             w-[90%] max-w-[720px]
+             flex-col rounded-2xl shadow-2xl dark:border dark:shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+		>
+			<!-- Header -->
+			<div class="border-surface-200 dark:border-surface-600 flex items-center justify-between border-b px-6 py-4">
+				<h2 class="m-0 text-base font-semibold tracking-wide">{$_('FILTER_MODAL_TITLE') ?? 'Filtri'}</h2>
+				<button
+					onclick={onclose}
+					aria-label="Chiudi"
+					class="text-surface-500 hover:bg-surface-200 hover:text-surface-800 dark:hover:bg-surface-600 dark:hover:text-surface-100 cursor-pointer rounded-md border-none
+                 bg-transparent p-1 text-2xl leading-none transition-colors"
+				>
+					&times;
+				</button>
+			</div>
+			<!-- Content (no scroll here — PickerComponent handles scroll internally) -->
+			<div class="p-6">
+				<PickerComponent />
+			</div>
+		</div>
+	</div>
 {/if}
-
-<style>
-  .overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-
-  .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 16px;
-    z-index: 10000;
-    max-width: 800px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    position: relative;
-  }
-
-  .modal-content {
-    padding: 0;
-  }
-</style>

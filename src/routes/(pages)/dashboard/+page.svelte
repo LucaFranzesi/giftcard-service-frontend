@@ -326,6 +326,21 @@
 		isModalOpen = true;
 	}
 
+	// Dynamic table height measurement
+	let tableScrollEl: HTMLDivElement;
+	let tableMaxHeight = $state('none');
+
+	function recalcTableHeight() {
+		if (!tableScrollEl) return;
+		const rect = tableScrollEl.getBoundingClientRect();
+		const footerEl = document.querySelector('footer');
+		const footerHeight = footerEl ? footerEl.offsetHeight : 0;
+		const paginationEl = document.querySelector('.pagination-bar');
+		const paginationHeight = paginationEl ? (paginationEl as HTMLElement).offsetHeight : 60;
+		const available = window.innerHeight - rect.top - footerHeight - paginationHeight;
+		tableMaxHeight = `${Math.max(150, available)}px`;
+	}
+
 	onMount(() => {
 		filterStore.loadFromCookie();
 
@@ -333,13 +348,19 @@
 			filterButtons = generateFilterButtons(state);
 		});
 
-		return unsubscribe;
+		recalcTableHeight();
+		window.addEventListener('resize', recalcTableHeight);
+
+		return () => {
+			unsubscribe();
+			window.removeEventListener('resize', recalcTableHeight);
+		};
 	});
 </script>
 
 <div class="relative h-full w-full">
 	{#if isModalOpen}
-		<FilterModal isOpen={isModalOpen} on:close={closeModal} />
+		<FilterModal isOpen={isModalOpen} onclose={closeModal} />
 	{/if}
 
 	<div class="filters-section">
@@ -371,7 +392,7 @@
 	</div>
 
 	<div class="table-wrap px-8 pb-8">
-		<div class="max-h-[600px] overflow-y-auto">
+		<div bind:this={tableScrollEl} class="overflow-y-auto" style="max-height: {tableMaxHeight};">
 			<table class="table w-full">
 				<thead class="bg-surface-100-900 sticky top-0">
 					<tr>
@@ -403,10 +424,10 @@
 		</div>
 	</div>
 
-	<div class="flex w-full flex-row justify-between p-5">
+	<div class="pagination-bar flex w-full flex-row justify-between p-5">
 		<div class="flex items-center">
 			<select name="size" id="size" class="select text-xs" value={size} onchange={(e) => (size = Number(e.currentTarget.value))}>
-				{#each [5, 10, 15] as v}
+				{#each [5, 10, 15, 25] as v}
 					<option value={v}>{v}</option>
 				{/each}
 				<option value={tableData.length}>{$_('PAGINATION_SHOW_ALL') ?? 'Show All'}</option>
