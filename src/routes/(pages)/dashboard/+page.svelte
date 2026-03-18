@@ -1,13 +1,27 @@
 <script lang="ts">
-	import { ChevronDown, ChevronUp, Funnel, ListFilter, Eye, EyeOff, ArrowLeft, ArrowRight, Ellipsis, ChevronsLeft, ChevronsRight, User, CreditCard, Tag, Hash, Calendar } from '@lucide/svelte/icons';
+	import {
+		ChevronDown,
+		ChevronUp,
+		Funnel,
+		Eye,
+		EyeOff,
+		ArrowLeft,
+		ArrowRight,
+		Ellipsis,
+		ChevronsLeft,
+		ChevronsRight,
+		User,
+		CreditCard,
+		Tag,
+		Hash,
+		Calendar,
+	} from '@lucide/svelte/icons';
 	import { Pagination } from '@skeletonlabs/skeleton-svelte';
 	import FilterButton from '$lib/components/FilterButton.svelte';
 	import { onMount } from 'svelte';
 	import type { SourceData } from '$lib/models/SourceData';
-	import type { FilterData } from '$lib/models/FilterData';
 	import FilterModal from '$lib/components/FilterModal.svelte';
 	import { filterStore, generateFilterButtons, type FilterButtonData } from '$lib/stores/filterStore';
-	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
 	let tableData: SourceData[] = $state([
@@ -253,39 +267,10 @@
 		},
 	]);
 
-	//TODO: Actally those are dummy data, change with correct filters
-	let enabledFilters: FilterData[] = $state([
-		{
-			label: 'Prova 123',
-			icon: ListFilter,
-			type: '',
-			value: 'Sublabel prova',
-		},
-		{
-			label: 'Prova 456',
-			icon: ListFilter,
-			type: 'sort',
-			value: 'Sublabel prova 2',
-		},
-		{
-			label: 'Prova 789',
-			icon: Eye,
-			type: '',
-			value: '',
-		},
-		{
-			label: 'Prova 123',
-			icon: ListFilter,
-			type: '',
-			value: '',
-		},
-	]);
-
 	// State
 	let page = $state(1);
 	let size = $state(5);
 	let total = $derived(tableData.length);
-	let isAscending = $state(true);
 
 	const slicedSource = $derived(tableData.slice((page - 1) * size, page * size));
 
@@ -294,146 +279,39 @@
 		tableData = tableData.map((x) => ({ ...x, checked: checkbox.checked }));
 	}
 
-	function changeSortOrder() {
-		isAscending = !isAscending;
-		const newIcon = isAscending ? ChevronDown : ChevronUp;
-
-		enabledFilters = enabledFilters.map((filter) => (filter.type === 'sort' ? { ...filter, icon: newIcon } : filter));
-
-		tableData = [...tableData].sort((a, b) => {
-			const cmp = a.paziente.localeCompare(b.paziente);
-			return isAscending ? cmp : -cmp;
-		});
-	}
-
-	// Dynamic table height measurement
-	let tableScrollEl: HTMLDivElement;
-	let tableMaxHeight = $state('none');
-
-	function recalcTableHeight() {
-		if (!tableScrollEl) return;
-		const rect = tableScrollEl.getBoundingClientRect();
-		const footerEl = document.querySelector('footer');
-		const footerHeight = footerEl ? footerEl.offsetHeight : 0;
-		const paginationEl = tableScrollEl.parentElement?.querySelector('.pagination-bar');
-		const paginationHeight = paginationEl ? (paginationEl as HTMLElement).offsetHeight : 60;
-		const available = window.innerHeight - rect.top - footerHeight - paginationHeight;
-		tableMaxHeight = `${Math.max(150, available)}px`;
-	}
-
-	onMount(() => {
-		recalcTableHeight();
-		window.addEventListener('resize', recalcTableHeight);
-		return () => window.removeEventListener('resize', recalcTableHeight);
-	});
-</script>
-
-<div class="flex h-fit w-fit flex-row items-center space-x-2 p-5">
-	<FilterButton type="minimal" icon={IconFunnel} onClick={changeSortOrder} />
-	{#each enabledFilters as filter}
-		<FilterButton type="complete" icon={filter.icon} label={filter.label} sublabel={filter.sublabel} />
-	{/each}
-</div>
-
-<div class="table-wrap px-8" bind:this={tableScrollEl} style="max-height: {tableMaxHeight}; overflow-y: auto;">
-	<table class="table w-full">
-		<thead class="bg-surface-100-900 sticky top-0">
-			<tr>
-				<th class="w-12">
-					<input type="checkbox" onclick={updateCheckStatus} />
-				</th>
-				<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Paziente</th>
-				<th class="w-32 max-w-32 min-w-18 text-xl sm:min-w-24 md:min-w-32">Saldo</th>
-				<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Scadenza</th>
-				<th class="w-32 max-w-42 min-w-28 text-xl sm:min-w-32 md:min-w-42">Tipologia</th>
-				<th class="w-full text-xl">Codice</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each slicedSource as row}
-				<tr>
-					<td class="w-12">
-						<input type="checkbox" checked={row.checked} />
-					</td>
-					<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.paziente}</td>
-					<td class="min-w-32 sm:min-w-24 md:min-w-32">{row.saldo}</td>
-					<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.scadenza}</td>
-					<td class="min-w-42 sm:min-w-32 md:min-w-42">{row.tipologia}</td>
-					<td class="w-full max-w-0 truncate">{row.codice}</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</div>
-
-<div class="pagination-bar flex w-full flex-row justify-between p-5">
-	<div class="flex items-center">
-		<select name="size" id="size" class="select text-xs" value={size} onchange={(e) => (size = Number(e.currentTarget.value))}>
-			{#each [5, 10, 15, 25] as v}
-ass="flex">
-		<Pagination count={total} data={tableData} {page} onPageChange={(e) => (page = e.page)} pageSize={size} onPageSizeChange={(e) => (size = e.pageSize)} siblingCount={4}>
-			{#snippet labelEllipsis()}<IconEllipsis class="size-4" />{/snippet}
-			{#snippet labelNext()}<IconArrowRight class="size-4" />{/snippet}
-			{#snippet labelPrevious()}<IconArrowLeft class="size-4" />{/snippet}
-			{#snippet labelFirst()}<IconFirst class="size-4" />{/snippet}
-			{#snippet labelLast()}<IconLast class="size-4" />{/snippet}
-		</Pagination>
-	</div>
-</div>
 	// Gestione dei filtri con store
 	let filterButtons = $state<FilterButtonData[]>([]);
-	let filterState = $state();
-
-	onMount(() => {
-		console.log('Dashboard mounted, loading filters...');
-		filterStore.loadFromCookie();
-		
-		// Sottoscrivi agli aggiornamenti dello store
-		const unsubscribe = filterStore.subscribe(state => {
-			console.log('Filter state updated:', state);
-			console.log('Sort visible:', state.sortVisible);
-			filterState = state;
-			const newButtons = generateFilterButtons(state);
-			console.log('Generated filter buttons:', newButtons);
-			filterButtons = newButtons;
-		});
-
-		return unsubscribe;
-	});
 
 	// Mappa delle icone per i filtri
-	const iconMap = {
-		'User': User,
-		'CreditCard': CreditCard,
-		'Tag': Tag,
-		'Hash': Hash,
-		'Calendar': Calendar,
-		'ChevronUp': ChevronUp,
-		'ChevronDown': ChevronDown,
-		'Eye': Eye,
-		'EyeOff': EyeOff,
-		'Filter': Funnel
-	} as const;
+	const iconMap: Record<string, typeof Funnel> = {
+		User: User,
+		CreditCard: CreditCard,
+		Tag: Tag,
+		Hash: Hash,
+		Calendar: Calendar,
+		ChevronUp: ChevronUp,
+		ChevronDown: ChevronDown,
+		Eye: Eye,
+		EyeOff: EyeOff,
+		Filter: Funnel,
+	};
 
 	function getIconComponent(iconName: string) {
-		return iconMap[iconName as keyof typeof iconMap] || Funnel;
+		return iconMap[iconName] || Funnel;
 	}
 
 	function removeFilter(filterId: number | string) {
 		if (typeof filterId === 'number') {
 			filterStore.removeFilter(filterId);
 		} else if (filterId === 'sort') {
-			// Nasconde l'ordinamento e reset ai valori default
 			filterStore.hideSort();
 		} else if (filterId === 'showExpired') {
-			// Disattiva l'opzione "Mostra scadute"
 			filterStore.setOptions({ showExpired: false, hideExpired: false });
 		} else if (filterId === 'hideExpired') {
-			// Disattiva l'opzione "Nascondi scadute"
 			filterStore.setOptions({ showExpired: false, hideExpired: false });
 		}
 	}
-	
+
 	function toggleSortDirection() {
 		filterStore.toggleSortDirection();
 	}
@@ -447,6 +325,16 @@ ass="flex">
 	function openModal() {
 		isModalOpen = true;
 	}
+
+	onMount(() => {
+		filterStore.loadFromCookie();
+
+		const unsubscribe = filterStore.subscribe((state) => {
+			filterButtons = generateFilterButtons(state);
+		});
+
+		return unsubscribe;
+	});
 </script>
 
 <div class="relative h-full w-full">
@@ -461,27 +349,21 @@ ass="flex">
 				<span class="filters-count">{filterButtons.length}</span>
 			{/if}
 		</div>
-		
+
 		{#if filterButtons.length > 0}
 			<div class="filters-scrollable">
 				{#each filterButtons as filter}
 					{#if filter.filterId === 'sort'}
-						<FilterButton 
-							type="complete" 
-							icon={getIconComponent(filter.icon)} 
-							label={filter.label} 
+						<FilterButton
+							type="complete"
+							icon={getIconComponent(filter.icon)}
+							label={filter.label}
 							sublabel={filter.sublabel}
 							onIconClick={toggleSortDirection}
 							onRemoveClick={() => removeFilter(filter.filterId)}
 						/>
 					{:else}
-						<FilterButton 
-							type="complete" 
-							icon={getIconComponent(filter.icon)} 
-							label={filter.label} 
-							sublabel={filter.sublabel}
-							onClick={() => removeFilter(filter.filterId)}
-						/>
+						<FilterButton type="complete" icon={getIconComponent(filter.icon)} label={filter.label} sublabel={filter.sublabel} onClick={() => removeFilter(filter.filterId)} />
 					{/if}
 				{/each}
 			</div>
@@ -551,7 +433,6 @@ ass="flex">
 		padding: 0.5rem 1rem;
 		border-bottom: 1px solid rgb(var(--color-surface-300));
 		background: rgb(var(--color-surface-50));
-		/* Lascia spazio per i picker lingua/tema a destra */
 		padding-right: 8rem;
 	}
 
@@ -572,10 +453,8 @@ ass="flex">
 		gap: 0.5rem;
 		overflow-x: auto;
 		flex: 1;
-		/* Nasconde la scrollbar */
 		scrollbar-width: none;
 		-ms-overflow-style: none;
-		/* Gradiente per indicare contenuto nascosto */
 		mask-image: linear-gradient(to right, black 85%, transparent 100%);
 		-webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
 	}
@@ -584,13 +463,11 @@ ass="flex">
 		display: none;
 	}
 
-	/* Limita la larghezza massima dei FilterButton */
 	.filters-scrollable :global(button) {
 		max-width: 200px;
 		flex-shrink: 0;
 	}
 
-	/* Responsive per tablet */
 	@media (max-width: 1024px) {
 		.filters-scrollable :global(button) {
 			max-width: 160px;
@@ -620,7 +497,6 @@ ass="flex">
 		flex-shrink: 0;
 	}
 
-	/* Responsive Design */
 	@media (max-width: 1024px) {
 		.filters-section {
 			padding-right: 6rem;
@@ -633,17 +509,16 @@ ass="flex">
 			padding-right: 4rem;
 			gap: 0.375rem;
 		}
-		
+
 		.filters-fixed {
 			gap: 0.375rem;
 		}
-		
+
 		.filters-scrollable {
 			gap: 0.375rem;
 		}
 	}
 
-	/* Assicuriamo che la tabella non vada sotto i filtri */
 	.table-wrap {
 		position: relative;
 		z-index: 1;
