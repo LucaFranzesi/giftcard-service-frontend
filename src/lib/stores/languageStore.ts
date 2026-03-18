@@ -4,6 +4,7 @@ import deDE from '../../translations/de-DE.json';
 import deAT from '../../translations/de-AT.json';
 import esES from '../../translations/es-ES.json';
 import ptPT from '../../translations/pt-PT.json';
+import enUS from '../../translations/en-US.json';
 
 // Register the translations
 register('it-IT', () => Promise.resolve(itIT));
@@ -11,6 +12,7 @@ register('de-DE', () => Promise.resolve(deDE));
 register('de-AT', () => Promise.resolve(deAT));
 register('es-ES', () => Promise.resolve(esES));
 register('pt-PT', () => Promise.resolve(ptPT));
+register('en-US', () => Promise.resolve(enUS));
 
 // Initialize i18n with Italian as the default locale
 init({
